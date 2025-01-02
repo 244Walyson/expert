@@ -14,9 +14,10 @@ datasource db {
 }
 
 model vehicle {
-  id    Int    @id @default(autoincrement())
-  name  String
-  plate String
+  id       Int          @id @default(autoincrement())
+  name     String
+  plate    String
+  category CategoryEnum
 
   brand   brand @relation(fields: [brandId], references: [id])
   brandId Int
@@ -26,4 +27,10 @@ model brand {
   id       Int       @id @default(autoincrement())
   name     String
   vehicles vehicle[]
+}
+
+enum CategoryEnum {
+  CARRO
+  MOTOCICLETA
+  CAMINHAO
 }

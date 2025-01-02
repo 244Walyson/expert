@@ -12,12 +12,18 @@ import { CreateVehicleRoute } from "./infra/api/fastfy/vehicle/create-vehicle.ro
 import { DeleteVehicleByIdRoute } from "./infra/api/fastfy/vehicle/delete-vehicle-by-id.route";
 import { FindVehicleByIdRoute } from "./infra/api/fastfy/vehicle/find-vehicle-by-id.route";
 import { UpdateVehicleByIdRoute } from "./infra/api/fastfy/vehicle/update-vehicle-by-id.route";
+import { FindBrandByIdUseCase } from "./core/use-cases/brand/find-brand-by-id.use-case";
+import { FindBrandByIdRoute } from "./infra/api/fastfy/brand/find-brand-by-id.fastify.route copy";
+import { FindAllVehiclesUseCase } from "./core/use-cases/vehicles/find-all-vehicles.use-case";
+import { FindAllVehicleRoute } from "./infra/api/fastfy/vehicle/find-all-vehicle.route";
 
 const prismaClient = new PrismaClient();
 
 const brandRepository = new BrandRepository(prismaClient);
 const createBrandUseCase = new CreateBrandUseCase(brandRepository);
+const findBrandByIdUseCase = new FindBrandByIdUseCase(brandRepository);
 const createBrandFastifyRoute = CreateBrandRoute.create(createBrandUseCase);
+const findBrandByIdRoute = FindBrandByIdRoute.create(findBrandByIdUseCase);
 
 const vehicleRepository = new VehicleRepository(prismaClient);
 const createVehicleUseCase = new CreateVehicleUseCase(vehicleRepository);
@@ -28,6 +34,7 @@ const findVehicleByIdUseCase = new FindVehicleByIdUseCase(vehicleRepository);
 const deleteVehicleByIdUseCase = new DeleteVehicleByIdUseCase(
   vehicleRepository
 );
+const findAllVehicleUseCase = new FindAllVehiclesUseCase(vehicleRepository);
 
 const createVehicleFastifyRoute =
   CreateVehicleRoute.create(createVehicleUseCase);
@@ -40,13 +47,18 @@ const findVehicleByIdFastifyRoute = FindVehicleByIdRoute.create(
 const deleteVehicleByIdFastifyRoute = DeleteVehicleByIdRoute.create(
   deleteVehicleByIdUseCase
 );
+const findAllVehicleFastifyRoute = FindAllVehicleRoute.create(
+  findAllVehicleUseCase
+);
 
 const routes = [
   createBrandFastifyRoute,
+  findBrandByIdRoute,
   createVehicleFastifyRoute,
   updateVehicleByIdFastifyRoute,
   findVehicleByIdFastifyRoute,
   deleteVehicleByIdFastifyRoute,
+  findAllVehicleFastifyRoute,
 ];
 
 ApiFastify.create(routes).start();

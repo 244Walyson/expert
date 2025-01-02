@@ -4,6 +4,13 @@ import { IBrandRepository } from "../../core/interfaces/brand-repository.interfa
 
 export class BrandRepository implements IBrandRepository {
   constructor(private readonly prismaClient: PrismaClient) {}
+  async findById(id: number): Promise<Brand | null> {
+    return await this.prismaClient.brand.findUnique({
+      where: {
+        id: id,
+      },
+    });
+  }
 
   async findByName(name: string): Promise<Brand | null> {
     return await this.prismaClient.brand.findFirst({

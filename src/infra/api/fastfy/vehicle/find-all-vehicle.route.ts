@@ -1,22 +1,21 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { HttpMethod, Route } from "../route";
-import { UpdateVehicleByIdUseCase } from "../../../../core/use-cases/vehicles/update-vehicle-by-id.use-case";
-import { Vehicle } from "../../../../core/entities/vehicle.entity";
+import { FindAllVehiclesUseCase } from "../../../../core/use-cases/vehicles/find-all-vehicles.use-case";
 
-export class UpdateVehicleByIdRoute implements Route {
+export class FindAllVehicleRoute implements Route {
   private constructor(
     private readonly path: string,
     private readonly method: HttpMethod,
-    private readonly updateVehicleByIdUseCase: UpdateVehicleByIdUseCase
+    private readonly findAllVehicleUseCase: FindAllVehiclesUseCase
   ) {}
 
   public static create(
-    updateVehicleByIdUseCase: UpdateVehicleByIdUseCase
-  ): UpdateVehicleByIdRoute {
-    return new UpdateVehicleByIdRoute(
-      "/vehicles/:id",
-      HttpMethod.PUT,
-      updateVehicleByIdUseCase
+    findAllVehicleUseCase: FindAllVehiclesUseCase
+  ): FindAllVehicleRoute {
+    return new FindAllVehicleRoute(
+      "/vehicles",
+      HttpMethod.GET,
+      findAllVehicleUseCase
     );
   }
 
@@ -26,12 +25,7 @@ export class UpdateVehicleByIdRoute implements Route {
   ) => Promise<void> {
     return async (request, response) => {
       try {
-        const { id } = request.params as { id: string };
-        const vehicle = request.body as Vehicle;
-        const createdBrand = await this.updateVehicleByIdUseCase.execute(
-          id,
-          vehicle
-        );
+        const createdBrand = await this.findAllVehicleUseCase.execute();
         console.log("Brand created", createdBrand);
         return response.status(201).send(createdBrand);
       } catch (error) {

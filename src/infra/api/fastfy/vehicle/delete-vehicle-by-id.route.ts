@@ -13,7 +13,7 @@ export class DeleteVehicleByIdRoute implements Route {
     deleteVehicleByIdUseCase: DeleteVehicleByIdUseCase
   ): DeleteVehicleByIdRoute {
     return new DeleteVehicleByIdRoute(
-      "/vehicles",
+      "/vehicles/:id",
       HttpMethod.DELETE,
       deleteVehicleByIdUseCase
     );
@@ -27,8 +27,7 @@ export class DeleteVehicleByIdRoute implements Route {
       try {
         const { id } = request.params as { id: string };
         const createdBrand = await this.deleteVehicleByIdUseCase.execute(id);
-        console.log("Brand created", createdBrand);
-        return response.status(201).send(createdBrand);
+        return response.status(204).send(createdBrand);
       } catch (error) {
         console.error("Error creating brand", error);
         return response.status(400).send({ message: "Error Creating Brand" });
