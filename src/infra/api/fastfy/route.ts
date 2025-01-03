@@ -9,11 +9,42 @@ export const HttpMethod = {
   DELETE: "delete" as HttpMethod,
 } as const;
 
-export interface Route {
-  getHandler(): (
+export abstract class Route {
+  abstract getHandler(): (
     request: FastifyRequest,
     response: FastifyReply
   ) => Promise<void>;
-  getPath(): string;
-  getMethod(): HttpMethod;
+  abstract getPath(): string;
+  abstract getMethod(): HttpMethod;
+  getExceptionMessage(
+    error: Error,
+    path: string
+  ): {
+    message: string;
+    timestamp: string;
+    path: string;
+  };
+  getExceptionMessage(
+    error: Error,
+    path: string
+  ): {
+    message: string;
+    timestamp: string;
+    path: string;
+  } {
+    const errorResponse = {
+      timestamp: new Date().toISOString(),
+      path: path,
+    };
+    if (error instanceof Error) {
+      return {
+        message: error.message,
+        ...errorResponse,
+      };
+    }
+    return {
+      message: "Unknown error",
+      ...errorResponse,
+    };
+  }
 }

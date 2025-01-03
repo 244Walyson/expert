@@ -1,13 +1,16 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { HttpMethod, Route } from "../route";
 import { FindAllVehiclesUseCase } from "../../../../core/use-cases/vehicles/find-all-vehicles.use-case";
+import { CustomException } from "../../../../core/exceptions/interface/exception.interface";
 
-export class FindAllVehicleRoute implements Route {
+export class FindAllVehicleRoute extends Route {
   private constructor(
     private readonly path: string,
     private readonly method: HttpMethod,
     private readonly findAllVehicleUseCase: FindAllVehiclesUseCase
-  ) {}
+  ) {
+    super();
+  }
 
   public static create(
     findAllVehicleUseCase: FindAllVehiclesUseCase
@@ -25,12 +28,31 @@ export class FindAllVehicleRoute implements Route {
   ) => Promise<void> {
     return async (request, response) => {
       try {
-        const createdBrand = await this.findAllVehicleUseCase.execute();
+        const {
+          query = "",
+          page = 1,
+          limit = 10,
+        } = request.query as {
+          query: string;
+          page: number;
+          limit: number;
+        };
+        const createdBrand = await this.findAllVehicleUseCase.execute({
+          query,
+          page,
+          limit,
+        });
         console.log("Brand created", createdBrand);
         return response.status(201).send(createdBrand);
       } catch (error) {
-        console.error("Error creating brand", error);
-        return response.status(400).send({ message: "Error Creating Brand" });
+        const errorResponse = this.getExceptionMessage(
+          error as Error,
+          this.path
+        );
+        if (error instanceof CustomException) {
+          return response.status(error.code).send(errorResponse);
+        }
+        return response.status(400).send(errorResponse);
       }
     };
   }

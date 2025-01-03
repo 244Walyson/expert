@@ -1,20 +1,34 @@
 import { Vehicle } from "../../entities/vehicle.entity";
-import { IVehicleRepository } from "../../interfaces/vehiclerepository.interface";
+import { DuplicatedResourceException } from "../../exceptions/duplicated-resource.exception";
+import { ResourceNotFoundException } from "../../exceptions/resource-not-found.exception";
+import { IVehicleRepository } from "../../interfaces/repositories/vehiclerepository.interface";
+import { VehicleValidator } from "./validators/vehicle.validator";
 
 export class UpdateVehicleByIdUseCase {
-  constructor(private readonly vehicleRepository: IVehicleRepository) {}
+  constructor(
+    private readonly vehicleRepository: IVehicleRepository,
+    private readonly vehicleValidator: VehicleValidator
+  ) {}
 
   async execute(id: string, vehicle: Vehicle): Promise<Vehicle> {
-    const vehicleExistis = await this.vehicleRepository.findById(+id);
-
-    if (!vehicleExistis) {
-      throw new Error("Vehicle not found");
+    delete vehicle.id;
+    this.vehicleValidator.validateVehicle(vehicle);
+    const vehicleExists = await this.vehicleRepository.findById(+id);
+    if (!vehicleExists) {
+      throw new ResourceNotFoundException("Vehicle not found");
     }
+    if (vehicle.plate !== vehicleExists.plate) {
+      const vehicleExistis = await this.vehicleRepository.findByPlate(
+        vehicle.plate
+      );
+      if (vehicleExistis) {
+        throw new DuplicatedResourceException(
+          "Vehicle with this plate already exists"
+        );
+      }
+    }
+    const updatedVehicle = await this.vehicleRepository.update(+id, vehicle);
 
-    delete vehicleExistis.id;
-    vehicleExistis.name = vehicle.name;
-    vehicleExistis.brand = vehicle.brand;
-
-    return vehicle;
+    return updatedVehicle;
   }
 }

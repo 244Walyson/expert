@@ -3,8 +3,9 @@ import {
   PrismaClient,
 } from "@prisma/client";
 import { Vehicle } from "../../core/entities/vehicle.entity";
-import { IVehicleRepository } from "../../core/interfaces/vehiclerepository.interface";
+import { IVehicleRepository } from "../../core/interfaces/repositories/vehiclerepository.interface";
 import { CategoryEnum } from "../../core/entities/enums/category.enum";
+import { PaginatedResponse } from "../../core/interfaces/shared/paginated-response.interface";
 
 export class VehicleRepository implements IVehicleRepository {
   constructor(private readonly prismaClient: PrismaClient) {}
@@ -36,8 +37,38 @@ export class VehicleRepository implements IVehicleRepository {
     };
   }
 
-  async findAll(): Promise<Vehicle[]> {
+  async findAll({
+    query,
+    offset,
+    limit,
+  }: {
+    query: string;
+    offset: number;
+    limit: number;
+  }): Promise<PaginatedResponse<Vehicle>> {
+    const whereClause = query
+      ? {
+          OR: [
+            {
+              name: {
+                contains: query,
+              },
+            },
+            {
+              plate: {},
+            },
+          ],
+        }
+      : {};
+
+    const total = await this.prismaClient.vehicle.count({
+      where: whereClause,
+    });
+
     const result = await this.prismaClient.vehicle.findMany({
+      where: whereClause,
+      skip: offset,
+      take: limit,
       select: {
         id: true,
         name: true,
@@ -51,10 +82,41 @@ export class VehicleRepository implements IVehicleRepository {
         },
       },
     });
-    return result.map((vehicle) => ({
-      ...vehicle,
-      category: vehicle.category as unknown as CategoryEnum,
-    }));
+
+    return {
+      data: result.map((vehicle) => ({
+        ...vehicle,
+        category: vehicle.category as unknown as CategoryEnum,
+      })),
+      total: total,
+    };
+  }
+
+  async findByPlate(plate: string): Promise<Vehicle | null> {
+    const result = await this.prismaClient.vehicle.findFirst({
+      where: {
+        plate: plate,
+      },
+      select: {
+        id: true,
+        name: true,
+        plate: true,
+        category: true,
+        brand: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+    if (!result) {
+      return null;
+    }
+    return {
+      ...result,
+      category: result.category as unknown as CategoryEnum,
+    };
   }
 
   async create(vehicle: Vehicle): Promise<Vehicle> {
@@ -87,10 +149,10 @@ export class VehicleRepository implements IVehicleRepository {
       category: result.category as unknown as CategoryEnum,
     };
   }
-  async update(vehicle: Vehicle): Promise<Vehicle> {
+  async update(id: number, vehicle: Vehicle): Promise<Vehicle> {
     const result = await this.prismaClient.vehicle.update({
       where: {
-        id: vehicle.id,
+        id: id,
       },
       data: {
         name: vehicle.name,
@@ -114,6 +176,7 @@ export class VehicleRepository implements IVehicleRepository {
         },
       },
     });
+
     return {
       ...result,
       category: result.category as unknown as CategoryEnum,

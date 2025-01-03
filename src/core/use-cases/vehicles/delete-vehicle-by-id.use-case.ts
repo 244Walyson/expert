@@ -1,4 +1,5 @@
-import { IVehicleRepository } from "../../interfaces/vehiclerepository.interface";
+import { ResourceNotFoundException } from "../../exceptions/resource-not-found.exception";
+import { IVehicleRepository } from "../../interfaces/repositories/vehiclerepository.interface";
 
 export class DeleteVehicleByIdUseCase {
   constructor(private readonly vehicleRepository: IVehicleRepository) {}
@@ -7,7 +8,7 @@ export class DeleteVehicleByIdUseCase {
     const vehicle = await this.vehicleRepository.findById(+id);
 
     if (!vehicle) {
-      throw new Error("Vehicle not found");
+      throw new ResourceNotFoundException("Vehicle not found");
     }
 
     await this.vehicleRepository.delete(+id);

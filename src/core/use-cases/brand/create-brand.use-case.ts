@@ -1,19 +1,25 @@
 import { Brand } from "../../entities/brand.entity";
-import { IBrandRepository } from "../../interfaces/brand-repository.interface";
+import { DuplicatedResourceException } from "../../exceptions/duplicated-resource.exception";
+import { InvalidFieldValueException } from "../../exceptions/invalid-field-value.exception";
+import { IBrandRepository } from "../../interfaces/repositories/brand-repository.interface";
 
 export class CreateBrandUseCase {
   constructor(private readonly brandRepository: IBrandRepository) {}
 
   async execute(brand: Brand): Promise<Brand> {
-    if (!brand.name) {
-      throw new Error("Brand name is required");
-    }
-    const brandExists = await this.brandRepository.findByName(brand.name);
+    this.validateBrand(brand);
 
+    const brandExists = await this.brandRepository.findByName(brand.name);
     if (brandExists) {
-      throw new Error("Brand already exists");
+      throw new DuplicatedResourceException("Brand already exists");
     }
 
     return this.brandRepository.create(brand);
+  }
+
+  private validateBrand(brand: Brand) {
+    if (!brand.name || brand.name.trim() === "") {
+      throw new InvalidFieldValueException("Brand name is required");
+    }
   }
 }

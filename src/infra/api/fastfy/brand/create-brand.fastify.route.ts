@@ -2,13 +2,16 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { Brand } from "../../../../core/entities/brand.entity";
 import { HttpMethod, Route } from "../route";
 import { CreateBrandUseCase } from "../../../../core/use-cases/brand/create-brand.use-case";
+import { CustomException } from "../../../../core/exceptions/interface/exception.interface";
 
-export class CreateBrandRoute implements Route {
+export class CreateBrandRoute extends Route {
   private constructor(
     private readonly path: string,
     private readonly method: HttpMethod,
     private readonly createBrandUseCase: CreateBrandUseCase
-  ) {}
+  ) {
+    super();
+  }
 
   public static create(
     createBrandUseCase: CreateBrandUseCase
@@ -27,8 +30,14 @@ export class CreateBrandRoute implements Route {
         console.log("Brand created", createdBrand);
         return response.status(201).send(createdBrand);
       } catch (error) {
-        console.error("Error creating brand", error);
-        return response.status(400).send({ message: "Error Creating Brand" });
+        const errorResponse = this.getExceptionMessage(
+          error as Error,
+          this.path
+        );
+        if (error instanceof CustomException) {
+          return response.status(error.code).send(errorResponse);
+        }
+        return response.status(400).send(errorResponse);
       }
     };
   }

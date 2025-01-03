@@ -1,13 +1,16 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { HttpMethod, Route } from "../route";
 import { FindVehicleByIdUseCase } from "../../../../core/use-cases/vehicles/find-vehicle-by-id.use-case";
+import { CustomException } from "../../../../core/exceptions/interface/exception.interface";
 
-export class FindVehicleByIdRoute implements Route {
+export class FindVehicleByIdRoute extends Route {
   private constructor(
     private readonly path: string,
     private readonly method: HttpMethod,
     private readonly findVehicleByIdUseCase: FindVehicleByIdUseCase
-  ) {}
+  ) {
+    super();
+  }
 
   public static create(
     findVehicleByIdUseCase: FindVehicleByIdUseCase
@@ -30,8 +33,14 @@ export class FindVehicleByIdRoute implements Route {
         console.log("Brand created", createdBrand);
         return response.status(201).send(createdBrand);
       } catch (error) {
-        console.error("Error creating brand", error);
-        return response.status(400).send({ message: "Error Creating Brand" });
+        const errorResponse = this.getExceptionMessage(
+          error as Error,
+          this.path
+        );
+        if (error instanceof CustomException) {
+          return response.status(error.code).send(errorResponse);
+        }
+        return response.status(400).send(errorResponse);
       }
     };
   }

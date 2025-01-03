@@ -10,5 +10,6 @@ export class Vehicle {
 
   constructor(vehicle: Partial<Vehicle>) {
     Object.assign(this, vehicle);
+    this.plate = this.plate.toUpperCase();
   }
 }

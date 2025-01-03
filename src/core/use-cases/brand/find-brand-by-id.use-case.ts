@@ -1,5 +1,6 @@
 import { Brand } from "../../entities/brand.entity";
-import { IBrandRepository } from "../../interfaces/brand-repository.interface";
+import { ResourceNotFoundException } from "../../exceptions/resource-not-found.exception";
+import { IBrandRepository } from "../../interfaces/repositories/brand-repository.interface";
 
 export class FindBrandByIdUseCase {
   constructor(private readonly brandRepository: IBrandRepository) {}
@@ -8,7 +9,7 @@ export class FindBrandByIdUseCase {
     const brand = await this.brandRepository.findById(+id);
 
     if (!brand) {
-      throw new Error("Brand not found");
+      throw new ResourceNotFoundException("Brand not found");
     }
     return brand;
   }
