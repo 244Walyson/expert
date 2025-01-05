@@ -4,6 +4,7 @@ import Fastify, {
   FastifyReply,
 } from "fastify";
 import { Route } from "./fastfy/route";
+import FastifyMultipart from "@fastify/multipart";
 import cors from "@fastify/cors"; // Importar o plugin de CORS
 
 export class ApiFastify {
@@ -12,7 +13,12 @@ export class ApiFastify {
   private constructor(routes: Route[]) {
     this.server = Fastify();
     this.enableCors();
+    this.registerMultipart();
     this.addRoutes(routes);
+  }
+
+  private registerMultipart(): void {
+    this.server.register(FastifyMultipart);
   }
 
   public static create(routes: Route[]): ApiFastify {

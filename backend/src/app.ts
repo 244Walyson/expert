@@ -19,6 +19,8 @@ import { FindAllVehicleRoute } from "./infra/api/fastfy/vehicle/find-all-vehicle
 import { VehicleValidator } from "./core/use-cases/vehicles/validators/vehicle.validator";
 import { FindAllBrandsUseCase } from "./core/use-cases/brand/find-all-brands.use-case";
 import { FindAllBrandsRoute } from "./infra/api/fastfy/brand/find-alll-brands.fastify.route";
+import { ImageUploadService } from "./infra/utils/s3.service";
+import { ImageUploadRoute } from "./infra/api/fastfy/image/s3.route";
 
 const prismaClient = new PrismaClient();
 
@@ -61,6 +63,9 @@ const findAllVehicleFastifyRoute = FindAllVehicleRoute.create(
   findAllVehicleUseCase
 );
 
+const uploadService = new ImageUploadService();
+const imageUploadRoute = ImageUploadRoute.create(uploadService);
+
 const routes = [
   createBrandFastifyRoute,
   findBrandByIdRoute,
@@ -69,7 +74,8 @@ const routes = [
   findVehicleByIdFastifyRoute,
   deleteVehicleByIdFastifyRoute,
   findAllVehicleFastifyRoute,
-  findAllBrandsRoute
+  findAllBrandsRoute,
+  imageUploadRoute,
 ];
 
 ApiFastify.create(routes).start();
