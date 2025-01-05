@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./backend
+    environment:
+      - DATABASE_URL=mysql://root:my-secret-pw@mysql:3306/desafio_db
+    ports:
+      - "8000:3000"
+    depends_on:
+      - mysql
+    networks:
+      - app-network
+    restart: always
+
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_DATABASE: desafio_db
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+    restart: always
+
+networks:
+  app-network:
+    driver: bridge

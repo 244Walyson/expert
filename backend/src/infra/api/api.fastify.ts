@@ -4,12 +4,14 @@ import Fastify, {
   FastifyReply,
 } from "fastify";
 import { Route } from "./fastfy/route";
+import cors from "@fastify/cors"; // Importar o plugin de CORS
 
 export class ApiFastify {
   private readonly server: FastifyInstance;
 
   private constructor(routes: Route[]) {
     this.server = Fastify();
+    this.enableCors();
     this.addRoutes(routes);
   }
 
@@ -38,6 +40,13 @@ export class ApiFastify {
       };
 
       this.server.route(routeOptions);
+    });
+  }
+
+  private enableCors(): void {
+    this.server.register(cors, {
+      origin: "*",
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     });
   }
 }
