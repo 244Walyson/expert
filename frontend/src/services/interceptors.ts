@@ -12,6 +12,7 @@ axiosInstance.interceptors.request.use(
     return config
   },
   (error) => {
+    console.error('Error on request:', error)
     return Promise.reject(new Error(error.message))
   },
 )
@@ -39,7 +40,7 @@ axiosInstance.interceptors.response.use(
       }
       return Promise.reject(new Error('Usuário não autenticado'))
     }
-
+    console.error('Error on response:', error)
     return Promise.reject(new Error(error.message))
   },
 )

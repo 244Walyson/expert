@@ -47,7 +47,6 @@ const router = useRouter()
 
 const props = defineProps<{
   vehicleId: number
-  onDelete: () => void
 }>()
 
 const handleDelete = () => {

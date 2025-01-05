@@ -6,8 +6,9 @@
       <h2 class="text-2xl font-semibold text-gray-800 mb-4">{{ vehicle.name }}</h2>
 
       <img
+        v-if="vehicle.imgUrl"
         class="h-80 w-full rounded-lg object-cover"
-        :src="`https://images.unsplash.com/photo-1735399554370-4f9eab0cfc4f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw0fHx8ZW58MHx8fHx8`"
+        :src="vehicle.imgUrl"
         :alt="vehicle.name"
       />
 
@@ -58,6 +59,7 @@ const vehicle = reactive({
   name: '',
   plate: '',
   category: '',
+  imgUrl: '',
   brand: {
     id: 0,
     name: '',

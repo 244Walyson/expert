@@ -13,19 +13,23 @@ export const createVehicle = async (data: Vehicle) => {
 
 export const getVehicles = async ({
   query = '',
+  category = '',
   page = 1,
   limit = 10,
 }: {
   query?: string
+  category?: string
   page?: number
   limit?: number
 }): Promise<Vehicle[]> => {
   try {
-    const response = await axiosIntance.get(`/vehicles?query=${query}&page=${page}&limit=${limit}`)
+    const response = await axiosIntance.get(
+      `/vehicles?query=${query}&page=${page}&limit=${limit}&category=${category}`,
+    )
     return response.data
   } catch (error) {
-    console.error('Error creating vehicle:', error)
-    throw new Error('Error creating vehicle. Try again later.')
+    console.error('Error fetching vehicles:', error)
+    throw new Error('Error fetching vehicles. Try again later.')
   }
 }
 

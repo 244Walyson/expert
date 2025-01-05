@@ -3,15 +3,39 @@
     <h1 class="text-3xl md:text-5xl py-10 font-bold">Listando Veículos</h1>
 
     <div
-      class="flex items-center border-b px-3 w-4/5 md:w-[600px] rounded-lg border border-gray-300"
+      class="flex flex-col gap-2 my-4 w-full justify-center items-center md:items-start md:w-[600px]"
     >
-      <Search class="mr-2 h-4 w-4 shrink-0 opacity-50" />
-      <Input
-        :value="data.queryParams.query"
-        @input="handleSearchInputChange($event.target.value)"
-        placeholder="Pesquise por um veículo, marca ou placa"
-        class="'flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',"
-      />
+      <div
+        class="flex items-center border-b px-3 w-4/5 md:w-full rounded-lg border border-gray-300"
+      >
+        <Search class="mr-2 h-4 w-4 shrink-0 opacity-50" />
+        <Input
+          :value="data.queryParams.query"
+          @input="handleSearchInputChange($event.target.value)"
+          placeholder="Pesquise por um veículo, marca ou placa"
+          class="'flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',"
+        />
+      </div>
+      <div class="w-4/5 md:w-[200px]">
+        <Select v-model="data.queryParams.category">
+          <SelectTrigger>
+            <SelectValue placeholder="Filtrar por categoria" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Categorias</SelectLabel>
+              <SelectItem
+                v-for="category in data.categories"
+                :key="category.key"
+                :value="category.key"
+                @click="handleSelectCategory(category.key)"
+              >
+                {{ category.name }}
+              </SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
     </div>
 
     <div class="flex flex-wrap gap-4 justify-center">
@@ -68,9 +92,19 @@ import {
   PaginationNext,
   PaginationPrev,
 } from '@/components/ui/pagination'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectLabel,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Search } from 'lucide-vue-next'
 import { debounce } from 'lodash'
 import { Vehicle } from '@/interfaces/vehicle'
+import { CategoryEnum } from '@/interfaces/vehicles.interface'
 
 const data = reactive({
   vehicles: {
@@ -83,9 +117,14 @@ const data = reactive({
   loading: true,
   queryParams: {
     query: '',
+    category: '',
     page: 1,
     limit: 9,
   },
+  categories: Object.keys(CategoryEnum).map((key) => ({
+    key,
+    name: CategoryEnum[key as keyof typeof CategoryEnum],
+  })),
 })
 
 const handlePageChange = (page: number) => {
@@ -95,6 +134,12 @@ const handlePageChange = (page: number) => {
 
 const handleSearchInputChange = (query: string) => {
   data.queryParams.query = query
+  data.queryParams.page = 1
+  console.log(data.queryParams)
+}
+
+const handleSelectCategory = (category: string) => {
+  data.queryParams.category = category
   data.queryParams.page = 1
   console.log(data.queryParams)
 }
@@ -127,7 +172,16 @@ watch(
   },
 )
 
+watch(
+  () => data.queryParams.category,
+  (newValue) => {
+    console.log('Cat alterada:', newValue)
+    fetchVehicles()
+  },
+)
+
 onMounted(() => {
   fetchVehicles()
+  console.log(data.categories)
 })
 </script>

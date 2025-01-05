@@ -1,9 +1,9 @@
 import type { Brand } from './brand.interface'
 
 export enum CategoryEnum {
-  CAR = 'Car',
-  MOTORCYCLE = 'Motorcycle',
-  BIKE = 'Bike',
+  CARRO = 'Carro',
+  MOTOCICLETA = 'Motocicleta',
+  CAMINHAO = 'Caminhão',
 }
 
 export interface Vehicle {

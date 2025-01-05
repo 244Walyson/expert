@@ -5,7 +5,7 @@
       @dragleave.prevent="toggleActive"
       @dragover.prevent
       @drop.prevent="onDrop"
-      className="flex rounded border-2 border-dashed relative h-24"
+      className="flex rounded border-2 border-dashed relative h-44"
     >
       <Label
         v-if="!data.imgUrl"
@@ -21,7 +21,10 @@
       </Label>
       <div v-if="data.imgUrl" class="h-full w-full">
         <img :src="data.imgUrl" :alt="data.imgUrl" class="h-full w-full rounded object-cover" />
-        <button @click="() => (data.imgUrl = '')" class="absolute top-0 right-0 p-1">
+        <button
+          @click="() => (data.imgUrl = '')"
+          class="absolute top-1 bg-gray-200 right-1 rounded-full p-3 hover:bg-gray-900"
+        >
           <Trash class="text-white" />
         </button>
       </div>
@@ -33,7 +36,7 @@
 <script setup lang="ts">
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { reactive, ref, defineProps } from 'vue'
+import { reactive, ref, defineProps, onMounted } from 'vue'
 import { uploadImage } from '@/services/image.service.ts'
 import { useToast } from '@/components/ui/toast/use-toast'
 import { Trash } from 'lucide-vue-next'
@@ -45,8 +48,9 @@ const data = reactive({
   imgUrl: '',
 })
 
-defineProps<{
+const props = defineProps<{
   onImageUpload: (url: string) => void
+  imgUrl: string
 }>()
 
 function onDrop(event: DragEvent) {
@@ -68,7 +72,8 @@ function handleFileUpload(file: File) {
   uploadImage(file)
     .then((response) => {
       data.imgUrl = response.url
-      onImageUpload(response.url)
+      console.log(response.url)
+      props.onImageUpload(response.url)
       toast({
         title: 'Imagem enviada com sucesso',
         description: 'A imagem foi enviada com sucesso.',
@@ -86,4 +91,10 @@ function handleFileUpload(file: File) {
 const toggleActive = () => {
   isActive.value = !isActive.value
 }
+
+onMounted(() => {
+  if (props.imgUrl) {
+    data.imgUrl = props.imgUrl
+  }
+})
 </script>

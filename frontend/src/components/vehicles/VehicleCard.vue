@@ -25,8 +25,8 @@
 
         <div class="relative flex justify-center items-center">
           <img
-            class="h-40 w-auto rounded-lg object-cover"
-            :src="vehicleImage"
+            class="h-40 w-40 rounded-lg object-cover"
+            :src="vehicle.imgUrl || vehicleImage"
             :alt="props.vehicle.name"
           />
         </div>
@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts" setup>
-import vehicleImage from '@/assets/trucks.png'
+import vehicleImage from '@/assets/logo.svg'
 import { RouterLink } from 'vue-router'
 import { DeleteDialog } from '@/components/vehicles'
 import { defineProps } from 'vue'
@@ -61,6 +61,5 @@ const props = defineProps<{
       name: string
     }
   }
-  onDelete: () => void
 }>()
 </script>

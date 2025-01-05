@@ -2,7 +2,7 @@
   <div class="w-1/2 mx-auto">
     <form @submit.prevent="handleSubmit">
       <div class="flex flex-col items-center">
-        <h1 class="text-3xl py-10 sm:text-4xl font-bold md:text-4xl">{{ data.title }}</h1>
+        <h1 class="text-2xl py-10 sm:text-4xl font-bold md:text-4xl">{{ data.title }}</h1>
 
         <div class="flex flex-col gap-4 w-[400px] sm:w-[450px]">
           <Input
@@ -32,15 +32,13 @@
             </SelectContent>
           </Select>
 
-          <div v-if="!isLoading" class="">
+          <div v-if="!isLoading" class="flex flex-col gap-4">
             <BrandSelectPopover
               :onBrandSelect="onBrandSelect"
               :selectedBrand="data.vehicle.brand"
             />
+            <ImageDropzone :onImageUpload="onImageUpload" :imgUrl="data.vehicle.imgUrl" />
           </div>
-
-          <ImageDropzone :onImageUpload="onImageUpload" />
-
           <Button type="submit" class="bg-blue-950 hover:bg-blue-900 text-white p-2 rounded mt-4"
             >Salvar</Button
           >
@@ -68,8 +66,9 @@ import {
 import { BrandSelectPopover, ImageDropzone } from '@/components/vehicles'
 import { Input } from '@/components/ui/input'
 import { createVehicle, updateVehicle, getVehicleById } from '@/services/vehicles.service'
-import { useRoute } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
+const router = useRouter()
 const route = useRoute()
 const { toast } = useToast()
 const isLoading = ref(false)
@@ -94,7 +93,7 @@ const onBrandSelect = (brand) => {
 
 const onImageUpload = (url) => {
   data.vehicle.imgUrl = url
-  console.log(data.vehicle.imgUrl)
+  console.log('onimage', data.vehicle.imgUrl)
 }
 
 const handleSubmit = () => {
@@ -103,10 +102,10 @@ const handleSubmit = () => {
   if (existsId) {
     return editVehicle()
   }
-  saveVehicle()
+  newVehicle()
 }
 
-const saveVehicle = () => {
+const newVehicle = () => {
   isLoading.value = true
   createVehicle(data.vehicle)
     .then(() => {
@@ -115,7 +114,7 @@ const saveVehicle = () => {
         description: 'O veículo foi cadastrado com sucesso.',
       })
       isLoading.value = false
-      router.push({ name: 'VehiclesDetails', params: { id: response.id } })
+      router.push({ name: 'vehiclesDetails', params: { id: response.id } })
     })
     .catch(() => {
       toast({
@@ -128,16 +127,17 @@ const saveVehicle = () => {
 
 const editVehicle = () => {
   isLoading.value = true
-  updateVehicle(data.vehicle)
+  updateVehicle(data.vehicle.id, data.vehicle)
     .then(() => {
       toast({
         title: 'Veículo atualizado com sucesso',
         description: 'Os dados do veículo foram atualizados com sucesso.',
       })
       isLoading.value = false
-      router.push({ name: 'VehiclesDetails', params: { id: response.id } })
+      router.push({ name: 'vehiclesDetails', params: { id: data.vehicle.id } })
     })
-    .catch(() => {
+    .catch((error) => {
+      console.error(error)
       toast({
         title: 'Erro ao atualizar veiculo',
         description: 'Ocorreu um erro ao atualizar o veículo.',
