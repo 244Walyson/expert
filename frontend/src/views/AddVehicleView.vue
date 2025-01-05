@@ -5,5 +5,5 @@
 </template>
 
 <script lang="ts" setup>
-import AddVehicle from '../components/AddVehicle.vue'
+import AddVehicle from '@/components/add-vehicle'
 </script>

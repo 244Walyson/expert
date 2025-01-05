@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { RouterLink, useRoute } from 'vue-router'
-import logo from '../assets/logo.png'
+import logo from '../assets/logo.svg'
 
 const isActiveLink = (routePath) => {
   const route = useRoute()
@@ -9,8 +9,8 @@ const isActiveLink = (routePath) => {
 </script>
 
 <template>
-  <nav class="bg-gray-800 border-b border-blue-500">
-    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+  <nav class="bg-gray-800 border-b border-gray-500">
+    <div class="mx-auto max-w-[90vw] px-2 sm:px-6 lg:px-4">
       <div class="flex h-20 items-center justify-between">
         <div class="flex flex-1 items-center justify-center md:items-stretch md:justify-start">
           <!-- Logo -->
@@ -23,11 +23,11 @@ const isActiveLink = (routePath) => {
               <RouterLink
                 to="/"
                 :class="[
-                  isActiveLink('/') ? 'bg-blue-900' : 'hover:bg-gray-900 hover:text-white',
+                  isActiveLink('/') ? 'bg-gray-900' : 'hover:bg-gray-900 hover:text-white',
                   'text-white',
                   'px-3',
                   'py-2',
-                  'rounded-md',
+                  'rounded',
                 ]"
                 >Home</RouterLink
               >
@@ -38,7 +38,7 @@ const isActiveLink = (routePath) => {
                   'text-white',
                   'px-3',
                   'py-2',
-                  'rounded-md',
+                  'rounded',
                 ]"
                 >Vehicles</RouterLink
               >
@@ -49,7 +49,7 @@ const isActiveLink = (routePath) => {
                   'text-white',
                   'px-3',
                   'py-2',
-                  'rounded-md',
+                  'rounded',
                 ]"
                 >Add Vehicle</RouterLink
               >

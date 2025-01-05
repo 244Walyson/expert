@@ -1,0 +1,5 @@
+export { default as AddVehicle } from './AddVehicle.vue'
+export { default as AddBrandDialog } from './AddBrandDialog.vue'
+export { default as BrandSelectPopover } from './BrandSelectPopover.vue'
+export { default as ImageDropzone } from './ImageDropzone.vue'
+export { default } from './AddVehicle.vue'

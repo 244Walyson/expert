@@ -18,6 +18,7 @@
           class="flex text-lg h-10 items-center rounded border border-blue-500 px-10"
           >Adicionar Veiculo</RouterLink
         >
+        <Button>Ola</Button>
       </div>
     </div>
     <div class="ml">
@@ -29,4 +30,5 @@
 <script lang="ts" setup>
 import GreetImage from '../assets/trucks.png'
 import { RouterLink } from 'vue-router'
+import { Button } from '@/components/ui/button'
 </script>
