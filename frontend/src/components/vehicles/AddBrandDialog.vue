@@ -16,7 +16,7 @@
         <div class="grid gap-4 py-4">
           <div class="grid grid-cols-4 items-center gap-4">
             <Label for="name" class="text-right"> Nome </Label>
-            <Input id="name" class="col-span-3 rounded" v-model="form.brand.name" />
+            <Input id="name" class="col-span-3 rounded" v-model="data.brand.name" />
           </div>
         </div>
         <DialogFooter>
@@ -30,7 +30,7 @@
               class="bg-blue-950 hover:bg-blue-900 rounded text-white"
               variant=""
               type="submit"
-              @click="createBrand"
+              @click="handleCreateBrand"
             >
               Salvar
             </Button>
@@ -43,7 +43,6 @@
 
 <script lang="ts" setup>
 import { reactive, defineProps } from 'vue'
-import axios from 'axios'
 import { useToast } from '@/components/ui/toast/use-toast'
 import { Button } from '@/components/ui/button'
 import {
@@ -58,6 +57,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { createBrand } from '@/services/brands.service'
 const { toast } = useToast()
 
 interface Brand {
@@ -70,22 +70,18 @@ const props = defineProps<{
   onBrandCreated: (brand: Brand) => void
 }>()
 
-const form = reactive({
+const data = reactive({
   brand: {},
 })
 
-const createBrand = () => {
-  axios
-    .post('http://localhost:3000/brands', form.brand)
-    .then((response) => {
+const handleCreateBrand = () => {
+  createBrand(data.brand)
+    .then((data) => {
+      props.onBrandCreated(data)
       toast({
         title: 'Marca cadastrada com sucesso',
         description: 'A marca foi cadastrada com sucesso.',
       })
-      console.log(response.data)
-      console.log(typeof props.onBrandCreated)
-      console.log(props.onBrandCreated)
-      props.onBrandCreated(response.data)
     })
     .catch((error) => {
       toast({

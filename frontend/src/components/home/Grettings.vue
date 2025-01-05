@@ -9,16 +9,15 @@
       </p>
       <div class="flex justify-center gap-4 mt-5">
         <RouterLink
-          to="vehicles"
-          class="flex text-lg text-white h-10 items-center rounded bg-blue-500 px-10"
-          >Ver Todos</RouterLink
-        >
-        <RouterLink
           to="/vehicles/add"
-          class="flex text-lg h-10 items-center rounded border border-blue-500 px-10"
+          class="flex text-lg h-10 items-center rounded border border-blue-950 px-10 hover:bg-gray-50 min-w-60 justify-center"
           >Adicionar Veiculo</RouterLink
         >
-        <Button>Ola</Button>
+        <RouterLink
+          to="vehicles"
+          class="flex text-lg text-white h-10 items-center rounded bg-blue-950 px-10 hover:bg-blue-900 min-w-60 justify-center"
+          >Ver Todos</RouterLink
+        >
       </div>
     </div>
     <div class="ml">
@@ -28,7 +27,6 @@
 </template>
 
 <script lang="ts" setup>
-import GreetImage from '../assets/trucks.png'
+import GreetImage from '@/assets/trucks.png'
 import { RouterLink } from 'vue-router'
-import { Button } from '@/components/ui/button'
 </script>

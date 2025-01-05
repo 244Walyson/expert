@@ -5,5 +5,5 @@
 </template>
 
 <script lang="ts" setup>
-import GreetingsComponent from '../components/GreetingsComponent.vue'
+import GreetingsComponent from '@/components/home'
 </script>

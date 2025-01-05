@@ -5,5 +5,5 @@
 </template>
 
 <script lang="ts" setup>
-import AddVehicle from '@/components/add-vehicle'
+import AddVehicle from '@/components/vehicles'
 </script>

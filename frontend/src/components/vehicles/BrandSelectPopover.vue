@@ -6,6 +6,7 @@
           <Button
             variant="outline"
             :aria-expanded="brandSelectionIsOpen"
+            type="button"
             class="w-full justify-between"
             :disabled="data.brand.id"
           >
@@ -44,7 +45,6 @@
 </template>
 
 <script lang="ts" setup>
-import axios from 'axios'
 import { onMounted, reactive, ref, defineProps } from 'vue'
 import Toaster from '@/components/ui/toast/Toaster.vue'
 import { Button } from '@/components/ui/button'
@@ -59,10 +59,12 @@ import {
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Pencil } from 'lucide-vue-next'
-import { AddBrandDialog } from '@/components/add-vehicle'
+import { AddBrandDialog } from '@/components/vehicles'
+import { getBrands } from '@/services/brands.service'
 
 const props = defineProps<{
-  onBrandSelect: (brand: { id: string; name: string }) => void
+  onBrandSelect: (brand: Brand) => void
+  selectedBrand: Brand
 }>()
 
 const data = reactive({
@@ -83,10 +85,15 @@ const clearBrand = () => {
 }
 
 onMounted(() => {
-  axios
-    .get('http://localhost:3000/brands')
+  if (props.selectedBrand) {
+    data.brand = props.selectedBrand
+  }
+
+  console.log('selected', props.selectedBrand)
+
+  getBrands()
     .then((response) => {
-      data.brands = response.data
+      data.brands = response
       console.log(data.brands)
     })
     .catch((error) => {
