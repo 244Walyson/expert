@@ -2,6 +2,7 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import { HttpMethod, Route } from "../route";
 import { FindAllVehiclesUseCase } from "../../../../core/use-cases/vehicles/find-all-vehicles.use-case";
 import { CustomException } from "../../../../core/exceptions/interface/exception.interface";
+import { CategoryEnum } from "../../../../core/entities/enums/category.enum";
 
 export class FindAllVehicleRoute extends Route {
   private constructor(
@@ -30,19 +31,21 @@ export class FindAllVehicleRoute extends Route {
       try {
         const {
           query = "",
+          category,
           page = 1,
           limit = 10,
         } = request.query as {
           query: string;
+          category: CategoryEnum;
           page: number;
           limit: number;
         };
         const createdBrand = await this.findAllVehicleUseCase.execute({
           query,
+          category,
           page,
           limit,
         });
-        console.log("Brand created", createdBrand);
         return response.status(201).send(createdBrand);
       } catch (error) {
         const errorResponse = this.getExceptionMessage(

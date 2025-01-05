@@ -1,11 +1,12 @@
 import {
+  Prisma,
   CategoryEnum as PrismaCategoryEnum,
   PrismaClient,
 } from "@prisma/client";
 import { Vehicle } from "../../core/entities/vehicle.entity";
-import { IVehicleRepository } from "../../core/interfaces/repositories/vehiclerepository.interface";
 import { CategoryEnum } from "../../core/entities/enums/category.enum";
 import { PaginatedResponse } from "../../core/interfaces/shared/paginated-response.interface";
+import { IVehicleRepository } from "../../core/interfaces/repositories/vehiclerepository.interface";
 
 export class VehicleRepository implements IVehicleRepository {
   constructor(private readonly prismaClient: PrismaClient) {}
@@ -39,27 +40,25 @@ export class VehicleRepository implements IVehicleRepository {
 
   async findAll({
     query,
+    category,
     offset,
     limit,
   }: {
     query: string;
+    category?: CategoryEnum;
     offset: number;
     limit: number;
   }): Promise<PaginatedResponse<Vehicle>> {
-    const whereClause = query
-      ? {
-          OR: [
-            {
-              name: {
-                contains: query,
-              },
-            },
-            {
-              plate: {},
-            },
-          ],
-        }
-      : {};
+    const whereClause: Prisma.vehicleWhereInput = {
+      ...(query && {
+        OR: [
+          { name: { contains: query } },
+          { plate: { contains: query } },
+          { brand: { name: { contains: query } } },
+        ],
+      }),
+      ...(category && { category: category as unknown as PrismaCategoryEnum }),
+    };
 
     const total = await this.prismaClient.vehicle.count({
       where: whereClause,
@@ -88,6 +87,7 @@ export class VehicleRepository implements IVehicleRepository {
         ...vehicle,
         category: vehicle.category as unknown as CategoryEnum,
       })),
+      pages: Math.ceil(total / limit),
       total: total,
     };
   }

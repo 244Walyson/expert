@@ -1,6 +1,6 @@
 import { Vehicle } from "../../entities/vehicle.entity";
 import { DuplicatedResourceException } from "../../exceptions/duplicated-resource.exception";
-import { IVehicleRepository } from "../../interfaces/repositories/vehiclerepository.interface";
+import { IVehicleRepository } from "../../interfaces/repositories/IVehicleRepository";
 import { VehicleValidator } from "./validators/vehicle.validator";
 
 export class CreateVehicleUseCase {
