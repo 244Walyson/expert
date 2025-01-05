@@ -31,7 +31,6 @@ export class CreateVehicleRoute extends Route {
       try {
         const brand = request.body as Vehicle;
         const createdBrand = await this.createVehicleUseCase.execute(brand);
-        console.log("Vehicle created", createdBrand);
         return response.status(201).send(createdBrand);
       } catch (error) {
         const errorResponse = this.getExceptionMessage(

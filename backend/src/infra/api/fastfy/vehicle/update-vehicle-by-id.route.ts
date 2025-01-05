@@ -35,7 +35,6 @@ export class UpdateVehicleByIdRoute extends Route {
           id,
           vehicle
         );
-        console.log("Brand created", createdBrand);
         return response.status(201).send(createdBrand);
       } catch (error) {
         const errorResponse = this.getExceptionMessage(

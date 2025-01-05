@@ -20,6 +20,7 @@ export class VehicleRepository implements IVehicleRepository {
         id: true,
         name: true,
         plate: true,
+        imgUrl: true,
         category: true,
         brand: {
           select: {
@@ -72,6 +73,7 @@ export class VehicleRepository implements IVehicleRepository {
         id: true,
         name: true,
         plate: true,
+        imgUrl: true,
         category: true,
         brand: {
           select: {
@@ -101,6 +103,7 @@ export class VehicleRepository implements IVehicleRepository {
         id: true,
         name: true,
         plate: true,
+        imgUrl: true,
         category: true,
         brand: {
           select: {
@@ -124,6 +127,7 @@ export class VehicleRepository implements IVehicleRepository {
       data: {
         name: vehicle.name,
         plate: vehicle.plate,
+        imgUrl: vehicle.imgUrl,
         category: vehicle.category as unknown as PrismaCategoryEnum,
         brand: {
           connect: {
@@ -135,6 +139,7 @@ export class VehicleRepository implements IVehicleRepository {
         id: true,
         name: true,
         plate: true,
+        imgUrl: true,
         category: true,
         brand: {
           select: {
@@ -157,6 +162,7 @@ export class VehicleRepository implements IVehicleRepository {
       data: {
         name: vehicle.name,
         plate: vehicle.plate,
+        imgUrl: vehicle.imgUrl,
         brand: {
           connect: {
             id: vehicle.brand?.id,
@@ -167,6 +173,7 @@ export class VehicleRepository implements IVehicleRepository {
         id: true,
         name: true,
         plate: true,
+        imgUrl: true,
         category: true,
         brand: {
           select: {

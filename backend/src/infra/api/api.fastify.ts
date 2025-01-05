@@ -5,7 +5,8 @@ import Fastify, {
 } from "fastify";
 import { Route } from "./fastfy/route";
 import FastifyMultipart from "@fastify/multipart";
-import cors from "@fastify/cors"; // Importar o plugin de CORS
+import cors from "@fastify/cors";
+import logger from "../utils/logger";
 
 export class ApiFastify {
   private readonly server: FastifyInstance;
@@ -28,15 +29,16 @@ export class ApiFastify {
   public start(): void {
     this.server.listen({ port: 3000 }, (err, address) => {
       if (!err) {
-        console.log(`Server listening at ${address}`);
+        logger.info(`Server listening at ${address}`);
         return;
       }
-      console.error("Error starting the server:", err);
+      logger.error("Error starting the server:", err);
     });
   }
 
   private addRoutes(routes: Route[]): void {
     routes.forEach((route) => {
+      logger.info(`Adding route ${route.getPath()} - ${route.getMethod()}`);
       const routeOptions = {
         method: route.getMethod(),
         url: route.getPath(),

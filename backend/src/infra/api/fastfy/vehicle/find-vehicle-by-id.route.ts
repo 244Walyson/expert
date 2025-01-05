@@ -30,7 +30,6 @@ export class FindVehicleByIdRoute extends Route {
       try {
         const { id } = request.params as { id: string };
         const createdBrand = await this.findVehicleByIdUseCase.execute(id);
-        console.log("Brand created", createdBrand);
         return response.status(201).send(createdBrand);
       } catch (error) {
         const errorResponse = this.getExceptionMessage(

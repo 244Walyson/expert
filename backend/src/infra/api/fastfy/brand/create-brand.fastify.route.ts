@@ -27,7 +27,6 @@ export class CreateBrandRoute extends Route {
       try {
         const brand = request.body as Brand;
         const createdBrand = await this.createBrandUseCase.execute(brand);
-        console.log("Brand created", createdBrand);
         return response.status(201).send(createdBrand);
       } catch (error) {
         const errorResponse = this.getExceptionMessage(

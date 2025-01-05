@@ -24,8 +24,6 @@ export class ImageUploadRoute extends Route {
   ) => Promise<void> {
     return async (request, response) => {
       try {
-        console.log("Request", request.headers);
-
         const uploadedImage = await this.imageUpladService.uploadFile(request);
         return response.status(200).send(uploadedImage);
       } catch (error) {

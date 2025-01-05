@@ -5,6 +5,7 @@ export class Vehicle {
   id?: number;
   name!: string;
   plate!: string;
+  imgUrl: string | null = null;
   category!: CategoryEnum;
   brand!: Brand;
 

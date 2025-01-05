@@ -17,6 +17,7 @@ model vehicle {
   id       Int          @id @default(autoincrement())
   name     String
   plate    String
+  imgUrl   String?
   category CategoryEnum
 
   brand   brand @relation(fields: [brandId], references: [id])
