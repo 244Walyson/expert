@@ -4,6 +4,7 @@ export enum CategoryEnum {
   CARRO = 'Carro',
   MOTOCICLETA = 'Motocicleta',
   CAMINHAO = 'Caminhão',
+  NAO_DEFINIDO = '',
 }
 
 export interface Vehicle {

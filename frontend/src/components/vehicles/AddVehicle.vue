@@ -17,6 +17,9 @@
             type="text"
             placeholder="Placa"
           />
+          <span class="text-sm -my-2 text-center" v-if="!data.plateIsValid"
+            >Formato de placa deve ser XXX0000 ou XXX0X00</span
+          >
 
           <Select v-model="data.vehicle.category" class="p-2 border border-gray-300 rounded">
             <SelectTrigger>
@@ -50,7 +53,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, ref, watch } from 'vue'
 import Toaster from '@/components/ui/toast/Toaster.vue'
 import { useToast } from '@/components/ui/toast/use-toast'
 import { Button } from '@/components/ui/button'
@@ -68,6 +71,7 @@ import { Input } from '@/components/ui/input'
 import { createVehicle, updateVehicle, getVehicleById } from '@/services/vehicles.service'
 import type { Vehicle } from '@/interfaces/vehicles.interface'
 import type { Brand } from '@/interfaces/brand.interface'
+import { CategoryEnum } from '@/interfaces/vehicles.interface'
 import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
@@ -76,8 +80,19 @@ const { toast } = useToast()
 const isLoading = ref(false)
 
 const data = reactive({
-  vehicle: {} as Vehicle,
+  vehicle: {
+    id: 0,
+    name: '',
+    plate: '',
+    category: CategoryEnum.NAO_DEFINIDO,
+    brand: {
+      id: 0,
+      name: '',
+    } as Brand,
+    imgUrl: '',
+  } as Vehicle,
   title: 'Adicionar Veículo',
+  plateIsValid: true,
 })
 
 const onBrandSelect = (brand: Brand) => {
@@ -97,6 +112,11 @@ const handleSubmit = () => {
     return editVehicle()
   }
   newVehicle()
+}
+
+const isValidPlate = () => {
+  const plateRegex = /^[A-Z]{3}\d{4}$|^[A-Z]{3}\d[A-Z]\d{2}$/
+  data.plateIsValid = plateRegex.test(data.vehicle.plate)
 }
 
 const newVehicle = () => {
@@ -156,6 +176,17 @@ const fetchVehicle = () => {
       isLoading.value = false
     })
 }
+
+watch(
+  () => data.vehicle.plate,
+  () => {
+    data.vehicle.plate = data.vehicle.plate.toUpperCase()
+    isValidPlate()
+    if (data.vehicle.plate.length === 0) {
+      data.plateIsValid = true
+    }
+  },
+)
 
 onMounted(() => {
   console.log(route.params)
