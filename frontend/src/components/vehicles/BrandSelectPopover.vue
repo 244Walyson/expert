@@ -5,7 +5,7 @@
         <div class="flex items-center gap-4 hover:cursor-pointer" @click="() => clearBrand()">
           <Button
             variant="outline"
-            :aria-expanded="brandSelectionIsOpen"
+            :aria-expanded="open"
             type="button"
             class="w-full justify-between"
             :disabled="data.brand.id"
@@ -30,7 +30,7 @@
               <CommandItem
                 v-for="brand in data.brands"
                 :key="brand.id"
-                :value="brand.name"
+                :value="brand.name ?? ''"
                 @click="() => selectBrand(brand)"
               >
                 {{ brand.name }}
@@ -61,6 +61,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Pencil } from 'lucide-vue-next'
 import { AddBrandDialog } from '@/components/vehicles'
 import { getBrands } from '@/services/brands.service'
+import type { Brand } from '@/interfaces/brand.interface'
 
 const props = defineProps<{
   onBrandSelect: (brand: Brand) => void
@@ -68,32 +69,30 @@ const props = defineProps<{
 }>()
 
 const data = reactive({
-  brand: {},
-  brands: [],
+  brand: {} as Brand,
+  brands: [] as Brand[],
 })
 
 const open = ref(false)
 
-const selectBrand = (brand) => {
+const selectBrand = (brand: Brand) => {
   props.onBrandSelect(brand)
   data.brand = brand
   open.value = false
 }
 
 const clearBrand = () => {
-  data.brand = { name: '' }
+  Object.assign(data.brand, {})
 }
 
 onMounted(() => {
   if (props.selectedBrand) {
-    data.brand = props.selectedBrand
+    Object.assign(data.brand, props.selectedBrand)
   }
-
-  console.log('selected', props.selectedBrand)
 
   getBrands()
     .then((response) => {
-      data.brands = response
+      Object.assign(data.brands, response)
       console.log(data.brands)
     })
     .catch((error) => {

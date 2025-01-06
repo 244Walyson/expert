@@ -2,7 +2,7 @@
   <div>
     <Dialog>
       <DialogTrigger as-child>
-        <Button variant="primary" class="hover:underline">
+        <Button variant="ghost" class="hover:underline">
           {{ props.triggertext }}
         </Button>
       </DialogTrigger>
@@ -28,7 +28,7 @@
           <DialogClose>
             <Button
               class="bg-blue-950 hover:bg-blue-900 rounded text-white"
-              variant=""
+              variant="ghost"
               type="submit"
               @click="handleCreateBrand"
             >
@@ -71,7 +71,9 @@ const props = defineProps<{
 }>()
 
 const data = reactive({
-  brand: {},
+  brand: {
+    name: '',
+  },
 })
 
 const handleCreateBrand = () => {

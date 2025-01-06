@@ -39,7 +39,7 @@
         class="border border-gray-500 px-4 flex items-center justify-center rounded-md hover:bg-gray-50"
         >Editar</RouterLink
       >
-      <DeleteDialog :vehicleId="props.vehicle.id" />
+      <DeleteDialog :vehicleId="+props.vehicle.id" />
     </div>
   </div>
 </template>
@@ -49,17 +49,9 @@ import vehicleImage from '@/assets/logo.svg'
 import { RouterLink } from 'vue-router'
 import { DeleteDialog } from '@/components/vehicles'
 import { defineProps } from 'vue'
+import type { Vehicle } from '@/interfaces/vehicles.interface'
 
 const props = defineProps<{
-  vehicle: {
-    id: string
-    name: string
-    plate: string
-    category: string
-    brand: {
-      id: number
-      name: string
-    }
-  }
+  vehicle: Vehicle
 }>()
 </script>

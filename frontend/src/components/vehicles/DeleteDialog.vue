@@ -50,11 +50,8 @@ const props = defineProps<{
 }>()
 
 const handleDelete = () => {
-  console.log('Deleting vehicle with id:', props.vehicleId)
-
-  deleteVehicle(props.vehicleId)
+  deleteVehicle(+props.vehicleId)
     .then(() => {
-      console.log('Vehicle deleted', props.vehicleId)
       toast({
         title: 'Veiculo excluído com sucesso',
         description: 'O veículo foi excluído com sucesso.',

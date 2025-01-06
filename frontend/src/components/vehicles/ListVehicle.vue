@@ -103,7 +103,7 @@ import {
 } from '@/components/ui/select'
 import { Search } from 'lucide-vue-next'
 import { debounce } from 'lodash'
-import { Vehicle } from '@/interfaces/vehicle'
+import type { Vehicle } from '@/interfaces/vehicles.interface'
 import { CategoryEnum } from '@/interfaces/vehicles.interface'
 
 const data = reactive({
@@ -129,7 +129,7 @@ const data = reactive({
 
 const handlePageChange = (page: number) => {
   data.queryParams.page = page
-  fetchVehicles(page)
+  fetchVehicles()
 }
 
 const handleSearchInputChange = (query: string) => {
@@ -148,8 +148,7 @@ const fetchVehicles = () => {
   console.log(data.queryParams)
   getVehicles(data.queryParams)
     .then((response) => {
-      console.log(response)
-      data.vehicles = response
+      Object.assign(data.vehicles, response)
       data.loading = false
     })
     .catch((error) => {

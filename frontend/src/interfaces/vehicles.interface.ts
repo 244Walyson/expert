@@ -10,6 +10,7 @@ export interface Vehicle {
   id: number
   name: string
   category: CategoryEnum
+  plate: string
   imgUrl: string
   brand: Brand
 }

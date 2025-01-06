@@ -7,9 +7,20 @@ services:
     environment:
       - DATABASE_URL=mysql://root:my-secret-pw@mysql:3306/desafio_db
     ports:
-      - "8000:3000"
+      - "3000:3000"
     depends_on:
       - mysql
+    networks:
+      - app-network
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
     networks:
       - app-network
     restart: always

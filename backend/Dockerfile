@@ -11,4 +11,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD [ "npm", "run", "start:migrate:dev" ]
+CMD [ "npm", "run", "start:migrate:prod:seed" ]

@@ -30,7 +30,7 @@
             <div class="md:hidden">
               <Sheet>
                 <SheetTrigger as-child>
-                  <Button variant="primary"> <Menu class="text-white text-4xl" /></Button>
+                  <Button variant="ghost"> <Menu class="text-white text-4xl" /></Button>
                 </SheetTrigger>
                 <SheetContent>
                   <SheetHeader>
@@ -72,7 +72,7 @@
 
 <script lang="ts" setup>
 import { RouterLink, useRoute } from 'vue-router'
-import logo from '@/assets/logo.svg'
+import logo from '@/assets/logo.png'
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
@@ -86,7 +86,7 @@ import {
 import { Menu } from 'lucide-vue-next'
 import { navbarLinks } from '@/static/navbar-links'
 
-const isActiveLink = (routePath) => {
+const isActiveLink = (routePath: string) => {
   const route = useRoute()
   return route.path === routePath
 }

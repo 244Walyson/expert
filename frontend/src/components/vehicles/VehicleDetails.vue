@@ -40,7 +40,7 @@
             class="flex border border-gray-500 rounded-md px-5 items-center justify-center hover:bg-gray-50"
             >Editar</RouterLink
           >
-          <DeleteDialog :vehicleId="vehicle.id" />
+          <DeleteDialog :vehicleId="+vehicle.id" />
         </div>
       </div>
     </div>
@@ -68,7 +68,7 @@ const vehicle = reactive({
 
 onMounted(() => {
   const vehicleId = router.params.id
-  getVehicleById(vehicleId).then((response) => {
+  getVehicleById(+vehicleId).then((response) => {
     console.log(response)
     Object.assign(vehicle, response)
   })

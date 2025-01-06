@@ -12,7 +12,7 @@ export class ApiFastify {
   private readonly server: FastifyInstance;
 
   private constructor(routes: Route[]) {
-    this.server = Fastify();
+    this.server = Fastify({ logger: true });
     this.enableCors();
     this.registerMultipart();
     this.addRoutes(routes);
@@ -27,12 +27,12 @@ export class ApiFastify {
   }
 
   public start(): void {
-    this.server.listen({ port: 3000 }, (err, address) => {
-      if (!err) {
-        logger.info(`Server listening at ${address}`);
-        return;
+    this.server.listen({ port: 3000, host: "0.0.0.0" }, (err, address) => {
+      if (err) {
+        logger.error(err);
+        process.exit(1);
       }
-      logger.error("Error starting the server:", err);
+      logger.info(`server listening on ${address}`);
     });
   }
 

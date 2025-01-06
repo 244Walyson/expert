@@ -6,7 +6,9 @@
   "scripts": {
     "start": "npx tsx src/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:migrate:dev": "npx prisma migrate dev && npm run start",
+    "start:migrate:prod": "npx prisma migrate dev && npm run start",
+    "start:migrate:prod:seed": "npx prisma migrate dev && npm run start",
+    "build": "tsc",
     "seed": "tsx prisma/seed/seed.ts"
   },
   "type": "module",

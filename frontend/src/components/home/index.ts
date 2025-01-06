@@ -1,1 +1,1 @@
-export { default } from './Grettings.vue'
+export { default } from './GrettingsComponent.vue'

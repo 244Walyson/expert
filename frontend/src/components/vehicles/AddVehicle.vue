@@ -66,6 +66,8 @@ import {
 import { BrandSelectPopover, ImageDropzone } from '@/components/vehicles'
 import { Input } from '@/components/ui/input'
 import { createVehicle, updateVehicle, getVehicleById } from '@/services/vehicles.service'
+import type { Vehicle } from '@/interfaces/vehicles.interface'
+import type { Brand } from '@/interfaces/brand.interface'
 import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
@@ -74,24 +76,16 @@ const { toast } = useToast()
 const isLoading = ref(false)
 
 const data = reactive({
-  vehicle: {
-    name: '',
-    plate: '',
-    category: '',
-    imgUrl: '',
-    brand: {
-      name: '',
-    },
-  },
+  vehicle: {} as Vehicle,
   title: 'Adicionar Veículo',
 })
 
-const onBrandSelect = (brand) => {
-  data.vehicle.brand = brand
+const onBrandSelect = (brand: Brand) => {
+  Object.assign(data.vehicle.brand, brand)
   return brand
 }
 
-const onImageUpload = (url) => {
+const onImageUpload = (url: string) => {
   data.vehicle.imgUrl = url
   console.log('onimage', data.vehicle.imgUrl)
 }
@@ -108,7 +102,7 @@ const handleSubmit = () => {
 const newVehicle = () => {
   isLoading.value = true
   createVehicle(data.vehicle)
-    .then(() => {
+    .then((response) => {
       toast({
         title: 'Veículo cadastrado com sucesso',
         description: 'O veículo foi cadastrado com sucesso.',
@@ -148,7 +142,7 @@ const editVehicle = () => {
 
 const fetchVehicle = () => {
   isLoading.value = true
-  getVehicleById(route.params.id)
+  getVehicleById(+route.params.id)
     .then((response) => {
       console.log(response)
       Object.assign(data.vehicle, response)
